@@ -48,7 +48,38 @@ void process_data(string& filename) {
 	//open file for reading and check if it is not empty
 	ifstream infile;
 	infile.open(filename.c_str());
+
+	//create temporary buffer file
+	auto now = chrono::system_clock::now();
+	time_t now_c = chrono::system_clock::to_time_t(now);
+
+	string buff = "TEMP_FILE_" + to_string(now_c) + ".txt";
+	TemporaryFileHandler tempFile(buff);
+
+	fstream file_buff;
+	file_buff.open(buff, ios::out | ios::trunc);
+
+
+
 }
+
+class TemporaryFileHandler {
+private:
+	string filename;
+
+public:
+	TemporaryFileHandler(const string& filename) : filename(filename) {}
+
+	~TemporaryFileHandler() {
+		if (!filename.empty()) {
+			remove(filename.c_str());
+		}
+	}
+
+	// Disallow copying and assignment
+	TemporaryFileHandler(const TemporaryFileHandler&) = delete;
+	TemporaryFileHandler& operator=(const TemporaryFileHandler&) = delete;
+};
 
 bool check_file_exists(string filename) {
 	ifstream file(filename);
