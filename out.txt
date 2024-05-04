@@ -1,0 +1,6 @@
+City           |Population  |Country        |Capital        |Continent      
+MOSCOW         |5648465     |Russia         |Moscow         |Europe         
+LONDON         |15156       |UK             |London         |Europe         
+New york       |1561561     |USA            |Washington DC  |North america  
+Ekaterinburg   |213123      |Russia         |Moscow         |Europe         
+Campshire      |123         |UK             |London         |Europe         

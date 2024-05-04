@@ -16,6 +16,8 @@
 #include <chrono>
 #include <vector>
 
+#include <ctime>
+
 using namespace std;
 
 
@@ -30,6 +32,18 @@ string getFilename();
 int selection();
 bool txt_check(string filename);
 void add_txt(string& filename);
-void process_data(string& filename);
+void processData(string& filename);
 void setColor(int colorCode);
 void resetColor();
+
+
+
+void printData(const vector<vector<string>>& data, int sortColumn);
+vector<vector<string>> insertionSort(string& filename, int sortColumn, int order);
+void saveData(vector<vector<string>> sortedData, int column, int order);
+string getCurrentDateTime();
+
+
+
+int getFieldOrder();
+int getSortOrder();
