@@ -88,13 +88,30 @@ void processData(string& filename) {
 	system("pause");
 }
 
+//string getCurrentDateTime() {
+//	time_t now = time(0);
+//	tm ltm;
+//	localtime_s(&ltm, &now);
+//	char buf[80];
+//	strftime(buf, sizeof(buf), "%Y-%m-%d_%X", &ltm);
+//	return buf;
+//}
 string getCurrentDateTime() {
-	time_t now = time(0);
-	tm ltm;
-	localtime_s(&ltm, &now);
-	char buf[80];
-	strftime(buf, sizeof(buf), "%Y-%m-%d_%X", &ltm);
-	return buf;
+	// Get current time point
+	auto now = chrono::system_clock::now();
+
+	// Convert to time_t for local time conversion
+	time_t tt = chrono::system_clock::to_time_t(now);
+
+	// Local time structure
+	tm local_time;
+	localtime_s(&local_time, &tt);
+
+	// Create string stream for formatted output
+	stringstream ss;
+	ss << put_time(&local_time, "%Y-%m-%d_%H-%M-%S");
+
+	return ss.str();
 }
 
 
@@ -102,9 +119,8 @@ void saveData(vector<vector<string>> sortedData, int column, int order) {
 
 	string OutFilename = getCurrentDateTime() + ".txt";
 
-	// Open the file
-	ofstream file(OutFilename);
-
+	// Open the file in write mode with error handling
+	ofstream file(OutFilename, ios::out | ios::trunc);
 	// Check if the file is open
 	if (!file.is_open()) {
 		cerr << "Unable to open file" << endl;
@@ -129,16 +145,27 @@ void saveData(vector<vector<string>> sortedData, int column, int order) {
 		break;
 	}
 
-	file << "INSERTION SORT. SORTED BY " << textcolumn << ". SORT ORDER " << (order == 0 ? "ASCENDING" : "DESCENDING") << "\n";
+	file << "INSERTION SORT. SORTED BY " << textcolumn << ". SORT ORDER " << (order == 1 ? "ASCENDING" : "DESCENDING") << "\n";
 	// Write the sorted data
+	vector<string> headerNames = { "CITY", "POPULATION", "COUNTRY", "CAPITAL", "CONTINENT" };
+	file << setw(15) << headerNames[column];
+	for (int i = 0; i < headerNames.size(); i++) {
+		if (i != column) {
+			file << setw(15) << headerNames[i];
+		}
+	}
+	file << "\n";
+
 	for (const auto& row : sortedData) {
 		// Write the sorted column first
-		file << row[column] << '\t';
+		file << setw(15) << row[column];
+		//file << row[column] << '\t';
 
 		// Write the rest of the columns excluding the sorted one
 		for (int i = 0; i < row.size(); i++) {
 			if (i != column) {
-				file << row[i] << '\t';
+				//file << row[i] << '\t';
+				file << setw(15) << row[i];
 			}
 		}
 
@@ -152,14 +179,17 @@ void saveData(vector<vector<string>> sortedData, int column, int order) {
 void printData(const vector<vector<string>>& data, int sortColumn) {
 	// Iterate over each row
 	for (const auto& row : data) {
-		// Print the sorted column first
-		cout << row[sortColumn] << '\t';
+		// Print the sorted column first with a fixed width
+		//cout <<  row[sortColumn] << setw(15) << ' ';
+		cout << setw(15) << row[sortColumn];
 
 		// Iterate over each column in the row
 		for (int i = 0; i < row.size(); i++) {
 			// Skip the sorted column since it's already printed
 			if (i != sortColumn) {
-				cout << row[i] << '\t';
+				// Print other columns with a fixed width
+				//cout << row[i] << setw(15);
+				cout << setw(15) << row[i];
 			}
 		}
 		// Print a newline at the end of each row
@@ -167,10 +197,12 @@ void printData(const vector<vector<string>>& data, int sortColumn) {
 	}
 }
 
+
 // Function to read data from a file and sort it by a specified column
 vector<vector<string>> insertionSort(string& filename, int sortColumn, int order) {
 	ifstream file(filename);	// Create an input file stream with the given filename
 	string line; 	// Declare a string to hold each line of the file
+	getline(file, line); // Skip the first line
 	vector<vector<string>> data; 	// Declare a 2D vector to hold all the data from the file
 	// Check if the file was successfully opened
 	if (file.is_open()) {
@@ -184,6 +216,8 @@ vector<vector<string>> insertionSort(string& filename, int sortColumn, int order
 			string word;
 			// Read the line word by word, using '|' as the delimiter
 			while (getline(ss, word, '|')) {
+				// Remove trailing spaces from the word
+				word.erase(word.find_last_not_of(" ") + 1);
 				// Add the word to the row vector
 				row.push_back(word);
 			}
@@ -200,24 +234,43 @@ vector<vector<string>> insertionSort(string& filename, int sortColumn, int order
 		return data;
 	}
 
+
 	// Insertion sort
-	//i = 2 to skip the first line containing the header
 	for (int i = 1; i < data.size(); i++) {
 		vector<string> key = data[i];
 		int j = i - 1;
+
 		switch (order) {
 		case 1: // Ascending order
-			//while (j >= 0 && (sortColumn == 1 ? stoi(data[j][sortColumn]) > stoi(key[sortColumn]) : data[j][sortColumn] > key[sortColumn])) {
-			while (j >= 0 && data[j][sortColumn] > key[sortColumn]) {
-				data[j + 1] = data[j];
-				j = j - 1;
+			if (sortColumn == 1) {
+				// Integer comparison using stoi
+				while (j >= 0 && stoi(data[j][sortColumn]) > stoi(key[sortColumn])) {
+					data[j + 1] = data[j];
+					j = j - 1;
+				}
+			}
+			else {
+				// String comparison
+				while (j >= 0 && data[j][sortColumn] > key[sortColumn]) {
+					data[j + 1] = data[j];
+					j = j - 1;
+				}
 			}
 			break;
 		case 2: // Descending order
-			//while (j >= 0 && (sortColumn == 1 ? stoi(data[j][sortColumn]) < stoi(key[sortColumn]) : data[j][sortColumn] < key[sortColumn])) {
-			while (j >= 0 && data[j][sortColumn] < key[sortColumn]) {
-				data[j + 1] = data[j];
-				j = j - 1;
+			if (sortColumn == 1) {
+				// Integer comparison using stoi
+				while (j >= 0 && stoi(data[j][sortColumn]) < stoi(key[sortColumn])) {
+					data[j + 1] = data[j];
+					j = j - 1;
+				}
+			}
+			else {
+				// String comparison
+				while (j >= 0 && data[j][sortColumn] < key[sortColumn]) {
+					data[j + 1] = data[j];
+					j = j - 1;
+				}
 			}
 			break;
 		}
@@ -225,6 +278,7 @@ vector<vector<string>> insertionSort(string& filename, int sortColumn, int order
 		data[j + 1] = key;
 	}
 
+	file.close();
 	// Return the sorted data
 	return data;
 }

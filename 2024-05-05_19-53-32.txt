@@ -1,0 +1,7 @@
+INSERTION SORT. SORTED BY POPULATION. SORT ORDER ASCENDING
+     POPULATION           CITY        COUNTRY        CAPITAL      CONTINENT
+            123      Campshire             UK         London         Europe
+          15156         LONDON             UK         London         Europe
+         213123   Ekaterinburg         Russia         Moscow         Europe
+        1561561       New york            USA  Washington DC  North america
+        5648465         MOSCOW         Russia         Moscow         Europe
