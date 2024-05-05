@@ -4,12 +4,41 @@ string sourceFilename;
 
 void show_introduction() {
 	system("cls");
-	cout << "  Welcome to the Program User Manual!\n";
-	cout << "  \n";
 
-	//resetColor(); // Assuming this resets console color, uncomment if needed
+	cout << " Welcome to the Program User Manual!\n";
+	cout << " \n";
+
+	cout << "Purpose:\n";
+	cout << "- The program sorts a provided dataset based on a chosen column.\n";
+	cout << "- It then prints the sorted data to the console.\n";
+	cout << "\n";
+
+	cout << "Features:\n";
+	cout << "- Sorts data in ascending or descending order.\n";
+	cout << "- Prints the sorted data with formatted columns.\n";
+	cout << "\n";
+
+	cout << "Instructions:\n";
+	cout << "1. Running the Program:\n";
+	cout << "   - Execute the program from your command line or terminal.\n";
+	cout << "\n";
+
+	cout << "2. Input:\n";
+	cout << "   - The program typically takes user input to specify the column for sorting.\n";
+	cout << "   - Follow the program's prompts or instructions to provide the necessary input.\n";
+	cout << "\n";
+
+	cout << "3. Output:\n";
+	cout << "   - The program displays the sorted data on the console.\n";
+	cout << "   - It is possible to save data in file with the name containing current date and time.\n";
+	cout << "\n";
+
+	cout << "Additional Notes:\n";
+	cout << "- The specific details of input and output may vary depending on the program's implementation.\n";
+	cout << "- Refer to any additional prompts or messages within the program for further guidance.\n";
+
 	system("pause");
-};
+}
 
 void menu() {
 	while (true) {
@@ -78,7 +107,7 @@ void processData(string& filename) {
 		choice = _getch() - '0';
 	}
 	cout << choice << endl;
-	switch (choice){
+	switch (choice) {
 	case 1:
 		saveData(sortedData, column, order);
 	case 2:
@@ -88,37 +117,22 @@ void processData(string& filename) {
 	system("pause");
 }
 
-//string getCurrentDateTime() {
-//	time_t now = time(0);
-//	tm ltm;
-//	localtime_s(&ltm, &now);
-//	char buf[80];
-//	strftime(buf, sizeof(buf), "%Y-%m-%d_%X", &ltm);
-//	return buf;
-//}
 string getCurrentDateTime() {
 	// Get current time point
 	auto now = chrono::system_clock::now();
-
 	// Convert to time_t for local time conversion
 	time_t tt = chrono::system_clock::to_time_t(now);
-
 	// Local time structure
 	tm local_time;
 	localtime_s(&local_time, &tt);
-
 	// Create string stream for formatted output
 	stringstream ss;
 	ss << put_time(&local_time, "%Y-%m-%d_%H-%M-%S");
-
 	return ss.str();
 }
 
-
 void saveData(vector<vector<string>> sortedData, int column, int order) {
-
 	string OutFilename = getCurrentDateTime() + ".txt";
-
 	// Open the file in write mode with error handling
 	ofstream file(OutFilename, ios::out | ios::trunc);
 	// Check if the file is open
@@ -144,7 +158,6 @@ void saveData(vector<vector<string>> sortedData, int column, int order) {
 		textcolumn = "CONTINENT";
 		break;
 	}
-
 	file << "INSERTION SORT. SORTED BY " << textcolumn << ". SORT ORDER " << (order == 1 ? "ASCENDING" : "DESCENDING") << "\n";
 	// Write the sorted data
 	vector<string> headerNames = { "CITY", "POPULATION", "COUNTRY", "CAPITAL", "CONTINENT" };
@@ -155,7 +168,6 @@ void saveData(vector<vector<string>> sortedData, int column, int order) {
 		}
 	}
 	file << "\n";
-
 	for (const auto& row : sortedData) {
 		// Write the sorted column first
 		file << setw(15) << row[column];
@@ -168,10 +180,8 @@ void saveData(vector<vector<string>> sortedData, int column, int order) {
 				file << setw(15) << row[i];
 			}
 		}
-
 		file << '\n';
 	}
-
 	// Close the file
 	file.close();
 }
@@ -196,7 +206,6 @@ void printData(const vector<vector<string>>& data, int sortColumn) {
 		cout << '\n';
 	}
 }
-
 
 // Function to read data from a file and sort it by a specified column
 vector<vector<string>> insertionSort(string& filename, int sortColumn, int order) {
@@ -234,12 +243,10 @@ vector<vector<string>> insertionSort(string& filename, int sortColumn, int order
 		return data;
 	}
 
-
 	// Insertion sort
 	for (int i = 1; i < data.size(); i++) {
 		vector<string> key = data[i];
 		int j = i - 1;
-
 		switch (order) {
 		case 1: // Ascending order
 			if (sortColumn == 1) {
@@ -247,15 +254,13 @@ vector<vector<string>> insertionSort(string& filename, int sortColumn, int order
 				while (j >= 0 && stoi(data[j][sortColumn]) > stoi(key[sortColumn])) {
 					data[j + 1] = data[j];
 					j = j - 1;
-				}
-			}
+				}			}
 			else {
 				// String comparison
 				while (j >= 0 && data[j][sortColumn] > key[sortColumn]) {
 					data[j + 1] = data[j];
 					j = j - 1;
-				}
-			}
+				}			}
 			break;
 		case 2: // Descending order
 			if (sortColumn == 1) {
@@ -263,21 +268,17 @@ vector<vector<string>> insertionSort(string& filename, int sortColumn, int order
 				while (j >= 0 && stoi(data[j][sortColumn]) < stoi(key[sortColumn])) {
 					data[j + 1] = data[j];
 					j = j - 1;
-				}
-			}
+				}			}
 			else {
 				// String comparison
 				while (j >= 0 && data[j][sortColumn] < key[sortColumn]) {
 					data[j + 1] = data[j];
 					j = j - 1;
-				}
-			}
+				}			}
 			break;
 		}
-
 		data[j + 1] = key;
 	}
-
 	file.close();
 	// Return the sorted data
 	return data;
@@ -297,7 +298,7 @@ int getFieldOrder() {
 		choice = _getch() - '0';
 	}
 	cout << choice << endl;
-	return choice-1;
+	return choice - 1;
 }
 
 int getSortOrder() {
@@ -320,21 +321,15 @@ int selection() {
 	setColor(2);
 	system("dir /b *.txt");
 	resetColor();
-
 	cout << "Select an option: " << endl;
 	cout << "(1) Set/Change source filename "; setColor(2); cout << sourceFilename << endl; resetColor();
 	cout << "(2) Sort and output data" << endl;
 	cout << "(3) Exit Program " << endl;
 	cout << "(4) Show introduction" << endl;
-
-	//cout << "Enter your choice: ";
-
 	choice = _getch() - '0';
 	while ((choice < 1 || choice > 4)) {
 		choice = _getch() - '0';
 	}
-	//cout << choice << endl;
-
 	return choice;
 }
 
@@ -343,15 +338,11 @@ bool txt_check(string filename) {
 	if (filename.length() >= 4 && equal(filename.end() - 4, filename.end(), ".txt", [](char a, char b) {
 		return tolower(a) == b;
 		})) {
-
 		setColor(2); cout << "File extension is valid." << endl; resetColor();
 		system("pause"); system("cls");
 		return true;
 	}
-	else {
-		//setColor(12); cout << "INVALID FILE EXTENSION" << endl; resetColor();
-		return false;
-	}
+	else {		return false;	}
 }
 
 void add_txt(string& filename) {
@@ -369,9 +360,7 @@ void add_txt(string& filename) {
 			if (choice == 'n') {
 				cout << "\nFile wasn't modified." << endl;
 				return; // Return without modifying the filename
-			}
-		}
-	}
+			}		}	}
 }
 
 
@@ -385,31 +374,27 @@ bool check_file_exists(string filename) {
 bool hasWindowsSpecChar(string filename) {
 	// List of characters not allowed in Windows filenames
 	list<char> prohibited_chars = { '<', '>', ':', '\"', '/', '\\', '|', '?', '*' };
-
 	for (char c : filename) {
 		if (find(prohibited_chars.begin(), prohibited_chars.end(), c) != prohibited_chars.end()) {
 			setColor(12);
 			cout << "Name of the file contains prohibited characters.\n";
 			resetColor();
 			return true;
-		}
-	}
-
+		}	}
 	return false;
 }
 
 bool isReservedName(string name) {
 	// Check if the name matches any of the reserved names
-	static const string reserved_names[] = { "CON","PRN","AUX","NUL","COM1","COM2","COM3","COM4","COM5","COM6","COM7","COM8","COM9","LPT1","LPT2"
-	,"LPT3","LPT4","LPT5","LPT6","LPT7","LPT8","LPT9" };
+	static const string reserved_names[] = { "CON","PRN","AUX","NUL",
+	"COM1","COM2","COM3","COM4","COM5","COM6","COM7","COM8","COM9","LPT1","LPT2","LPT3","LPT4","LPT5","LPT6","LPT7","LPT8","LPT9" };
 	for (const auto& reserved : reserved_names) {
 		if (name == reserved) {
 			setColor(12);
 			cout << "It is a reserved name.\n";
 			resetColor();
 			return true; // Name matches a reserved name
-		}
-	}
+		}	}
 	return false; // Name is not reserved
 }
 
@@ -435,7 +420,6 @@ string getFilename() {
 		if (isReservedName(filename)) {
 			continue;
 		}
-		// If all checks pass, break out of the loop and return the filename
 		break;
 	}
 	return filename;
@@ -444,13 +428,6 @@ string getFilename() {
 void setColor(int colorCode) {
 	HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	SetConsoleTextAttribute(hConsole, colorCode);
-	//  0 - Black //  1 - Blue //  2 - GREEN
-	//  3 - Aqua //  4 - Red //  5 - Purple
-	//  6 - Yellow //  7 - White //  8 - Gray
-	//  9 - Light Blue //  10 - Light Green //  11 - Light Aqua
-	//  12 - LIGHT RED //  13 - Light Purple //  14 - Light Yellow
-	//  15 - Bright White
-
 }
 void resetColor() {
 	setColor(7); // 7 is the default color (white on black)
