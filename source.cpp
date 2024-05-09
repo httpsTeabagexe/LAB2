@@ -1,5 +1,4 @@
 #include "header.h"
-
 string sourceFilename;
 
 void show_introduction() {
@@ -83,20 +82,11 @@ void menu() {
 }
 
 void processData(string& filename) {
-	// 1. Load data from file into vector
-	//done in 4.
-	// 2. Ask user to choose by what field to sort (1-5)
 	int column = getFieldOrder();
-	// 3. Ask user order of sorting (ascending/descending)
 	int order = getSortOrder();
-
-	// 4. Sort data by chosen vector column
-
+	// Perform the sorting using the insertionSort function
 	vector<vector<string>> sortedData = insertionSort(filename, column, order);
-
-	//5. Display results
 	printData(sortedData, column);
-
 	int choice;
 	cout << "Save sorted data into file?" << endl;
 	cout << "(1) Yes" << endl;
@@ -113,7 +103,6 @@ void processData(string& filename) {
 	case 2:
 		break;
 	}
-
 	system("pause");
 }
 
@@ -166,42 +155,32 @@ void saveData(vector<vector<string>> sortedData, int column, int order) {
 		if (i != column) {
 			file << setw(15) << headerNames[i];
 		}
-	}
-	file << "\n";
+	}	file << "\n";
 	for (const auto& row : sortedData) {
-		// Write the sorted column first
 		file << setw(15) << row[column];
-		//file << row[column] << '\t';
-
 		// Write the rest of the columns excluding the sorted one
 		for (int i = 0; i < row.size(); i++) {
 			if (i != column) {
-				//file << row[i] << '\t';
 				file << setw(15) << row[i];
-			}
-		}
+			}		}
 		file << '\n';
 	}
-	// Close the file
 	file.close();
+	cout << "Data was succesfuly saved to " << OutFilename << endl;
 }
 
 void printData(const vector<vector<string>>& data, int sortColumn) {
 	// Iterate over each row
 	for (const auto& row : data) {
 		// Print the sorted column first with a fixed width
-		//cout <<  row[sortColumn] << setw(15) << ' ';
 		cout << setw(15) << row[sortColumn];
-
 		// Iterate over each column in the row
 		for (int i = 0; i < row.size(); i++) {
 			// Skip the sorted column since it's already printed
 			if (i != sortColumn) {
 				// Print other columns with a fixed width
-				//cout << row[i] << setw(15);
 				cout << setw(15) << row[i];
-			}
-		}
+			}		}
 		// Print a newline at the end of each row
 		cout << '\n';
 	}
@@ -242,22 +221,42 @@ vector<vector<string>> insertionSort(string& filename, int sortColumn, int order
 		// Return the data even if it's not sorted
 		return data;
 	}
-
+	int perm_count(0);
 	// Insertion sort
 	for (int i = 1; i < data.size(); i++) {
 		vector<string> key = data[i];
+		// Check if sortColumn is 1 and replace "!NODATA!" with -1
+		if (sortColumn == 1 && key[sortColumn] == "!NODATA!") {
+			if (order == 1) {
+				key[sortColumn] = "60000000";
+			}
+			else {
+				key[sortColumn] = "-1";
+			}
+		}
+		else if (sortColumn != 1 && key[sortColumn] == "!NODATA!") {
+			if (order == 1) {
+				key[sortColumn] = "zzz";
+			}
+			else {
+				key[sortColumn] = "AAA";
+			}
+		}
 		int j = i - 1;
+
 		switch (order) {
 		case 1: // Ascending order
 			if (sortColumn == 1) {
 				// Integer comparison using stoi
 				while (j >= 0 && stoi(data[j][sortColumn]) > stoi(key[sortColumn])) {
+					perm_count++;
 					data[j + 1] = data[j];
 					j = j - 1;
 				}			}
 			else {
 				// String comparison
 				while (j >= 0 && data[j][sortColumn] > key[sortColumn]) {
+					perm_count++;
 					data[j + 1] = data[j];
 					j = j - 1;
 				}			}
@@ -266,19 +265,32 @@ vector<vector<string>> insertionSort(string& filename, int sortColumn, int order
 			if (sortColumn == 1) {
 				// Integer comparison using stoi
 				while (j >= 0 && stoi(data[j][sortColumn]) < stoi(key[sortColumn])) {
+					perm_count++;
 					data[j + 1] = data[j];
 					j = j - 1;
 				}			}
 			else {
 				// String comparison
 				while (j >= 0 && data[j][sortColumn] < key[sortColumn]) {
+					perm_count++;
 					data[j + 1] = data[j];
 					j = j - 1;
 				}			}
 			break;
 		}
+
 		data[j + 1] = key;
 	}
+
+	for (int i = 0; i < data.size(); ++i) {
+		if (data[i][sortColumn] == "-1" || data[i][sortColumn] == "60000000" || data[i][sortColumn] == "zzz" || data[i][sortColumn] == "AAA") {
+			data[i][sortColumn] = "!NODATA!";
+		}
+	}
+
+	//now all the invalid data is stored in one format as !NODATA!
+
+	cout << "Number of permutations: " << perm_count << endl;
 	file.close();
 	// Return the sorted data
 	return data;

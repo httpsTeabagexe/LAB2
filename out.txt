@@ -1,6 +1,21 @@
 City           |Population  |Country        |Capital        |Continent      
-MOSCOW         |5648465     |Russia         |Moscow         |Europe         
-LONDON         |15156       |UK             |London         |Europe         
-New york       |1561561     |USA            |Washington DC  |North america  
-Ekaterinburg   |213123      |Russia         |Moscow         |Europe         
-Campshire      |123         |UK             |London         |Europe         
+MOSCOW         |5648465     |Russia         |Moscow         |Europe
+LONDON         |15156       |UK             |London         |Europe
+New york       |1561561     |USA            |Washington DC  |North america
+Ekaterinburg   |213123      |Russia         |Moscow         |Europe
+Campshire      |123         |UK             |London         |Europe
+PARIS          |!NODATA!    |France         |Paris          |!NODATA!
+BERLIN         |3769495     |Germany        |Berlin         |Europe
+Los Angeles    |3979576     |!NODATA!       |Washington DC  |North America
+Shanghai       |24256800    |China          |Beijing        |Asia
+Mumbai         |20411000    |!NODATA!       |New Delhi      |Asia
+Istanbul       |15460000    |Turkey         |Ankara         |Europe
+BUENOS AIRES   |3054300     |Argentina      |Buenos Aires   |South America
+NAIROBI        |4397073     |Kenya          |Nairobi        |Africa
+Dubai          |3199674     |UAE            |Abu Dhabi      |!NODATA!
+Singapore      |5850342     |Singapore      |Singapore      |Asia
+TOKYO          |!NODATA!    |Japan          |Tokyo          |Asia
+!NODATA!       |5312163     |Australia      |Canberra       |Australia
+!NODATA!       |9842126     |Peru           |Lima           |South America
+Johannesburg   |9574416     |South Africa   |Pretoria       |Africa
+MEXICO CITY    |8918653     |Mexico         |Mexico City    |North America

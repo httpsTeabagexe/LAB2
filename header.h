@@ -1,21 +1,23 @@
 #pragma once
 
-#include <algorithm>
-#include <cctype>
-#include <conio.h>
-#include <ctype.h>
-#include <fstream>
-#include <iomanip> 
-#include <iostream>
-#include <istream>
-#include <limits>
-#include <list>
+//#include <algorithm>
+//#include <cctype>
+//#include <ctype.h>
+//#include <iomanip> 
+//#include <istream>
+//#include <limits>
+//#include <ctime>
+
 #include <sstream>
+#include <iomanip>
+#include <iostream>
+#include <conio.h>
+#include <fstream>
+#include <list>
 #include <string>
 #include <windows.h>
 #include <chrono>
 #include <vector>
-#include <ctime>
 
 using namespace std;
 void show_introduction();                  // Функция вывода пользовательского руководства программы
