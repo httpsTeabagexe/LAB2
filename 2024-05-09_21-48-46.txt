@@ -1,0 +1,22 @@
+INSERTION SORT. SORTED BY CONTINENT. SORT ORDER DESCENDING
+      CONTINENT           CITY     POPULATION        COUNTRY        CAPITAL
+  South America   BUENOS AIRES        3054300      Argentina   Buenos Aires
+  South America       !NODATA!        9842126           Peru           Lima
+  North america       New york        1561561            USA  Washington DC
+  North America    Los Angeles        3979576       !NODATA!  Washington DC
+  North America    MEXICO CITY        8918653         Mexico    Mexico City
+         Europe         MOSCOW        5648465         Russia         Moscow
+         Europe         LONDON          15156             UK         London
+         Europe   Ekaterinburg         213123         Russia         Moscow
+         Europe      Campshire            123             UK         London
+         Europe         BERLIN        3769495        Germany         Berlin
+         Europe       Istanbul       15460000         Turkey         Ankara
+      Australia       !NODATA!        5312163      Australia       Canberra
+           Asia       Shanghai       24256800          China        Beijing
+           Asia         Mumbai       20411000       !NODATA!      New Delhi
+           Asia      Singapore        5850342      Singapore      Singapore
+           Asia          TOKYO       !NODATA!          Japan          Tokyo
+         Africa        NAIROBI        4397073          Kenya        Nairobi
+         Africa   Johannesburg        9574416   South Africa       Pretoria
+       !NODATA!          PARIS       !NODATA!         France          Paris
+       !NODATA!          Dubai        3199674            UAE      Abu Dhabi

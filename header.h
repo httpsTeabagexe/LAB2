@@ -38,3 +38,5 @@ bool check_file_exists(string filename); // Функция проверки существования файла
 bool hasWindowsSpecChar(string filename); // Функция проверки наличия недопустимых символов Windows в имени файла
 void setColor(int colorCode);                // Функция установки цвета текста в консоли
 void resetColor();                          // Функция сброса цвета текста консоли на значение по умолчанию
+bool is_file_empty(const string& filename); // Функция проверки файла на пустоту
+bool is_file_valid(const string& filename); // Функция проверки файла на валидность

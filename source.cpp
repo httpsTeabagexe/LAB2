@@ -48,9 +48,13 @@ void menu() {
 		case 1:
 			sourceFilename = getFilename();
 			add_txt(sourceFilename);
+			// Check if getFilename() returned an empty string (user exited)
+			if (sourceFilename.empty()) {
+				break; // Go back to the beginning of the menu loop
+			}
 			if (!check_file_exists(sourceFilename)) {
 				setColor(12);
-				cerr << "Error: File " << sourceFilename << " does not exist in the current working folder." << endl;
+				cerr << "Error: File <<" << sourceFilename << ">> does not exist in the current working folder." << endl;
 				resetColor();
 				sourceFilename.clear();
 				system("pause");
@@ -59,13 +63,13 @@ void menu() {
 			break;
 
 		case 2:
-			if (sourceFilename != "") {
+			if (sourceFilename != "" && is_file_valid(sourceFilename)) {
 				processData(sourceFilename);
 				break;
 			}
 			else {
 				setColor(12);
-				cerr << "Error: No file selected. Please select a file first." << endl;
+				cerr << "Error: Invalid or missing source file: " << sourceFilename << endl;
 				resetColor();
 				system("pause");
 				break;
@@ -162,11 +166,14 @@ void saveData(vector<vector<string>> sortedData, int column, int order) {
 		for (int i = 0; i < row.size(); i++) {
 			if (i != column) {
 				file << setw(15) << row[i];
-			}		}
+			}
+		}
 		file << '\n';
 	}
 	file.close();
+	setColor(2);
 	cout << "Data was succesfuly saved to " << OutFilename << endl;
+	resetColor();
 }
 
 void printData(const vector<vector<string>>& data, int sortColumn) {
@@ -180,7 +187,8 @@ void printData(const vector<vector<string>>& data, int sortColumn) {
 			if (i != sortColumn) {
 				// Print other columns with a fixed width
 				cout << setw(15) << row[i];
-			}		}
+			}
+		}
 		// Print a newline at the end of each row
 		cout << '\n';
 	}
@@ -252,14 +260,16 @@ vector<vector<string>> insertionSort(string& filename, int sortColumn, int order
 					perm_count++;
 					data[j + 1] = data[j];
 					j = j - 1;
-				}			}
+				}
+			}
 			else {
 				// String comparison
 				while (j >= 0 && data[j][sortColumn] > key[sortColumn]) {
 					perm_count++;
 					data[j + 1] = data[j];
 					j = j - 1;
-				}			}
+				}
+			}
 			break;
 		case 2: // Descending order
 			if (sortColumn == 1) {
@@ -268,14 +278,16 @@ vector<vector<string>> insertionSort(string& filename, int sortColumn, int order
 					perm_count++;
 					data[j + 1] = data[j];
 					j = j - 1;
-				}			}
+				}
+			}
 			else {
 				// String comparison
 				while (j >= 0 && data[j][sortColumn] < key[sortColumn]) {
 					perm_count++;
 					data[j + 1] = data[j];
 					j = j - 1;
-				}			}
+				}
+			}
 			break;
 		}
 
@@ -290,7 +302,7 @@ vector<vector<string>> insertionSort(string& filename, int sortColumn, int order
 
 	//now all the invalid data is stored in one format as !NODATA!
 
-	cout << "Number of permutations: " << perm_count << endl;
+	//cout << "Number of permutations: " << perm_count << endl;
 	file.close();
 	// Return the sorted data
 	return data;
@@ -354,7 +366,7 @@ bool txt_check(string filename) {
 		system("pause"); system("cls");
 		return true;
 	}
-	else {		return false;	}
+	else { return false; }
 }
 
 void add_txt(string& filename) {
@@ -370,11 +382,43 @@ void add_txt(string& filename) {
 				return; // Return after modifying the filename
 			}
 			if (choice == 'n') {
-				cout << "\nFile wasn't modified." << endl;
+				cout << "\nSource file wasn't set." << endl;
+				filename.clear();
 				return; // Return without modifying the filename
-			}		}	}
+			}
+		}
+	}
 }
 
+bool is_file_valid(const string& filename) {
+	ifstream file(filename);
+	string line;
+
+	// Try to read the header line
+	if (!getline(file, line)) {
+		return false; // File is empty or error reading
+	}
+	// (Optional) Check if the header line matches the expected format
+	if (line != "City           |Population  |Country        |Capital        |Continent") {
+		return false; // Header doesn't match
+	}
+
+	// Check the format of each subsequent line
+	while (getline(file, line)) {
+		// Assuming the delimiter is '|' and you have 5 fields
+		stringstream ss(line);
+		string field;
+		int fieldCount = 0;
+		while (getline(ss, field, '|')) {
+			fieldCount++;
+		}
+		if (fieldCount != 5) {
+			return false; // Incorrect number of fields
+		}
+	}
+
+	return true; // File format appears valid
+}
 
 bool check_file_exists(string filename) {
 	ifstream file(filename);
@@ -392,7 +436,8 @@ bool hasWindowsSpecChar(string filename) {
 			cout << "Name of the file contains prohibited characters.\n";
 			resetColor();
 			return true;
-		}	}
+		}
+	}
 	return false;
 }
 
@@ -406,8 +451,14 @@ bool isReservedName(string name) {
 			cout << "It is a reserved name.\n";
 			resetColor();
 			return true; // Name matches a reserved name
-		}	}
+		}
+	}
 	return false; // Name is not reserved
+}
+
+bool is_file_empty(const string& filename) {
+	ifstream file(filename);
+	return file.peek() == ifstream::traits_type::eof();
 }
 
 string getFilename() {
@@ -416,10 +467,14 @@ string getFilename() {
 	while (true) {
 		cout << ">>";
 		getline(cin, filename);
+
+		// Exit condition
 		if (filename == "~") {
 			menu();
-			break;
+			return ""; // Return to main menu 
 		}
+
+		// Input Validation:
 		if (filename.empty()) {
 			setColor(12);
 			cout << "File name cannot be empty.\n";
@@ -432,6 +487,22 @@ string getFilename() {
 		if (isReservedName(filename)) {
 			continue;
 		}
+
+		// Check if the file exists and is not empty:
+		if (!check_file_exists(filename)) {
+			setColor(12);
+			cerr << "Error: File <<" << filename << ">> does not exist.\n";
+			resetColor();
+			continue; // Ask for input again
+		}
+		if (is_file_empty(filename)) {
+			setColor(12);
+			cerr << "Error: File <<" << filename << ">> is empty.\n";
+			resetColor();
+			continue;
+		}
+
+		// If all checks pass, filename is valid
 		break;
 	}
 	return filename;
